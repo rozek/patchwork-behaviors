@@ -16,10 +16,9 @@
         expectNumber('input value',newValue)
         if ($._Value === newValue) { return }
 
-        if ($._hasFocus == true) {              // keep input value while typing
-          $._pendingValue = newValue
-        } else {
-          $._Value = newValue
+        $._Value = newValue
+        if ($._hasFocus == false) {             // keep input value while typing
+          $._ValueToShow = newValue
         }
       }
     )
@@ -32,7 +31,7 @@
         $._Minimum = (newValue == null ? undefined : newValue)
 
         if (newValue != null) {
-          if ($._Value < newValue) { $._Value = newValue }
+          if ($._Value < newValue) { $.Value = newValue }
           if (($._Maximum || Infinity) < newValue) { $._Maximum = newValue }
         }
       }
@@ -47,7 +46,7 @@
 
         if (newValue != null) {
           if (($._Minimum || -Infinity) > newValue) { $._Minimum = newValue }
-          if ($._Value > newValue) { $._Value = newValue }
+          if ($._Value > newValue) { $.Value = newValue }
         }
       }
     )
@@ -106,9 +105,8 @@
 
     function setFocus (newValue) {
       $._hasFocus = newValue
-      if ((newValue == false) && ($._pendingValue != null)) {
-        $._Value = $._pendingValue
-        $._pendingValue = undefined
+      if ((newValue == false) && ($._Value !== $._ValueToShow)) {
+        $._ValueToShow = $._Value
       }
     }
 
@@ -129,13 +127,13 @@
 
     reactively(() => {
       if ($._Suggestions == null) {
-        this.Render = html`<input type="number" value=${$._Value}
+        this.Render = html`<input type="number" value=${$._ValueToShow}
           min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
           placeholder=${$._Placeholder} readonly=${$._isReadonly}
           oninput=${handleInput} onchange=${handleInput}
           onfocus=${() => setFocus(true)} onblur=${() => setFocus(false)}/>`
       } else {
-        this.Render = html`<input type="number" value=${$._Value}
+        this.Render = html`<input type="number" value=${$._ValueToShow}
           min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
           placeholder=${$._Placeholder} readonly=${$._isReadonly}
           oninput=${handleInput} onchange=${handleInput}
