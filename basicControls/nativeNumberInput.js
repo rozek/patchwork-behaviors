@@ -15,7 +15,7 @@
       function (newValue) {
         expectNumber('input value',newValue)
         $._Value = newValue
-        if (! $._hasFocus) { $._ValueToShow = newValue }
+        if ($._hasFocus != true) { $._ValueToShow = newValue }
       }
     )
 
