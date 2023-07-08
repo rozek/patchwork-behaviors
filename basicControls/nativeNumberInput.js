@@ -17,9 +17,7 @@
         if ($._Value === newValue) { return }
 
         $._Value = newValue
-        if ($._hasFocus == false) {             // keep input value while typing
-          $._ValueToShow = newValue
-        }
+        if (! $._hasFocus) { $._ValueToShow = newValue }
       }
     )
 
