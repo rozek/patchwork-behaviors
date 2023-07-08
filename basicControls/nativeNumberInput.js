@@ -48,7 +48,7 @@
 
     define$Property(
       'Stepping',
-      function () { return $._Stepping },
+      function () { return $._Stepping || 'any' },
       function (newValue) {
         if (newValue !== 'any') {
           allowNumberInRange('input stepping',newValue, 0,Infinity, false,false)
@@ -108,13 +108,13 @@
     reactively(() => {
       if ($._Suggestions == null) {
         this.Render = html`<input type="number" value=${$._Value}
-          min=${$._Minimum} max=${$._Maximum} placeholder=${$._Placeholder}
-          readonly=${$._isReadonly}
+          min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
+          placeholder=${$._Placeholder} readonly=${$._isReadonly}
           oninput=${handleInput} onchange=${handleInput}/>`
       } else {
         this.Render = html`<input type="number" value=${$._Value}
-          min=${$._Minimum} max=${$._Maximum} placeholder=${$._Placeholder}
-          readonly=${$._isReadonly}
+          min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
+          placeholder=${$._Placeholder} readonly=${$._isReadonly}
           oninput=${handleInput} onchange=${handleInput}
           list=${this.uniqueId}/>
         <datalist id=${this.uniqueId}>
