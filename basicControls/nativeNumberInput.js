@@ -1,6 +1,7 @@
   const {
     ValueIsFiniteNumber,
-    expectBoolean, expectNumber, allowFiniteNumber, expectListSatisfying,
+    expectBoolean, expectNumber, allowFiniteNumber, allowNumberInRange,
+    expectListSatisfying,
     allowTextline
   } = SPW
 
