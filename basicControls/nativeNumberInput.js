@@ -14,7 +14,13 @@
       function () { return $._Value || 0 },
       function (newValue) {
         expectNumber('input value',newValue)
-        if ($._Value !== newValue) { $._Value = newValue }
+        if ($._Value === newValue) { return }
+
+        if ($._hasFocus == true) {              // keep input value while typing
+          $._pendingValue = newValue
+        } else {
+          $._Value = newValue
+        }
       }
     )
 
@@ -90,6 +96,22 @@
       }
     )
 
+    define$Property(
+      'hasFocus',
+      function () { return $._hasFocus || false },
+      function (_) {
+        throw new Error('ReadOnlyVariable: "hasFocus" must not be set directly')
+      }
+    )
+
+    function setFocus (newValue) {
+      $._hasFocus = newValue
+      if ((newValue == false) && ($._pendingValue != null)) {
+        $._Value = $._pendingValue
+        $._pendingValue = undefined
+      }
+    }
+
     fill$fromJSON(JSONfor$)
 
     $.toJSON = function () {
@@ -110,12 +132,14 @@
         this.Render = html`<input type="number" value=${$._Value}
           min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
           placeholder=${$._Placeholder} readonly=${$._isReadonly}
-          oninput=${handleInput} onchange=${handleInput}/>`
+          oninput=${handleInput} onchange=${handleInput}
+          onfocus=${() => setFocus(true)} onblur=${() => setFocus(false)}/>`
       } else {
         this.Render = html`<input type="number" value=${$._Value}
           min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
           placeholder=${$._Placeholder} readonly=${$._isReadonly}
           oninput=${handleInput} onchange=${handleInput}
+          onfocus=${() => setFocus(true)} onblur=${() => setFocus(false)}
           list=${this.uniqueId}/>
         <datalist id=${this.uniqueId}>
           ${$._Suggestions.map((Suggestion) => {
