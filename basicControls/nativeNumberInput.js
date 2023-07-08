@@ -22,7 +22,7 @@
       function () { return $._Minimum },
       function (newValue) {
         allowFiniteNumber('minimum input value',newValue)
-        $._Minimum = (newValue == null ? undefined : new Date(newValue))
+        $._Minimum = (newValue == null ? undefined : newValue)
 
         if (newValue != null) {
           if ($._Value < newValue) { $._Value = newValue }
@@ -36,7 +36,7 @@
       function () { return $._Maximum },
       function (newValue) {
         allowFiniteNumber('maximum input value',newValue)
-        $._Maximum = (newValue == null ? undefined : new Date(newValue))
+        $._Maximum = (newValue == null ? undefined : newValue)
 
         if (newValue != null) {
           if (($._Minimum || -Infinity) > newValue) { $._Minimum = newValue }
@@ -90,7 +90,7 @@
 
     function handleInput (Event) {
       let Value = parseFloat(Event.target.value)
-      if (isFinite(Value)) { $._Value = Value }
+      if (isFinite(Value)) { $.Value = Value }
     }
 
     reactively(() => {
