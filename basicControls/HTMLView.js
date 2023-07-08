@@ -1,7 +1,4 @@
-//declare const SPW
-
-//namespace HTMLView {
-  const { allowText } = SPW
+  const { expectText } = SPW
 
   export function initialize (
     Work,Sheet,Patch, reactively,
@@ -11,7 +8,7 @@
       'Value',
       function () { return $._Value },
       function (newValue) {
-        allowText('HTMLView value',newValue)
+        expectText('HTMLView value',newValue)
         $._Value = newValue
       }
     )
@@ -26,5 +23,4 @@
       this.Render = html`<div dangerouslySetInnerHTML=${{ __html:$._Value }}></div>`
     })
   }
-//}
 
