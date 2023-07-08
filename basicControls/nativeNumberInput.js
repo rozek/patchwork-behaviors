@@ -13,7 +13,7 @@
       function () { return $._Value || 0 },
       function (newValue) {
         expectNumber('input value',newValue)
-        $._Value = newValue
+        if ($._Value !== newValue) { $._Value = newValue }
       }
     )
 
