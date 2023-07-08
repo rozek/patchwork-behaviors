@@ -15,7 +15,7 @@
       function (newValue) {
         expectNumber('input value',newValue)
         $._Value = newValue
-        if ($._hasFocus != true) { $._ValueToShow = newValue }
+        if (! $._hasFocus) { $._ValueToShow = newValue }
       }
     )
 
@@ -118,7 +118,7 @@
 
     function handleInput (Event) {
       let Value = parseFloat(Event.target.value)
-      if (isFinite(Value)) { $.Value = Value }
+      if (isFinite(Value)) { $._Value = $._ValueToShow = Value }
     }
 
     reactively(() => {
