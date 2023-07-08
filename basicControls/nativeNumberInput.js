@@ -46,6 +46,17 @@
     )
 
     define$Property(
+      'Stepping',
+      function () { return $._Stepping },
+      function (newValue) {
+        if (newValue !== 'any') {
+          allowNumberInRange('input stepping',newValue, 0,Infinity, false,false)
+        }
+        $._Stepping = newValue
+      }
+    )
+
+    define$Property(
       'Placeholder',
       function () { return $._Placeholder },
       function (newValue) {
