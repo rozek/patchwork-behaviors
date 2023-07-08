@@ -102,6 +102,7 @@
     function setFocus (newValue) {
       $._hasFocus = newValue
       if ((newValue == false) && ($._Value !== $._ValueToShow)) {
+console.log('lost focus, showing now',$._Value)
         $._ValueToShow = $._Value
       }
     }
@@ -118,7 +119,7 @@
 
     function handleInput (Event) {
       let Value = parseFloat(Event.target.value)
-console.log('input number',Value)
+console.log('input number',Value,Event.type)
       if (isFinite(Value)) { $._Value = $._ValueToShow = Value }
     }
 
