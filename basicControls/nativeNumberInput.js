@@ -11,9 +11,12 @@
   ) {
     define$Property(
       'Value',
-      function () { return $._Value || 0 },
+      function () {
+console.log('Value Getter',$._Value || 0)
+         return $._Value || 0 },
       function (newValue) {
         expectNumber('input value',newValue)
+console.log('Value Setter',newValue)
         $._Value = newValue
         if (! $._hasFocus) { $._ValueToShow = newValue }
       }
@@ -120,7 +123,7 @@ console.log('lost focus, showing now',$._Value)
     function handleInput (Event) {
       let Value = parseFloat(Event.target.value)
 console.log('input number',Value,Event.type)
-      if (isFinite(Value)) { $._Value = $._ValueToShow = Value }
+      if (isFinite(Value)) { $._Value = Value }
     }
 
     reactively(() => {
