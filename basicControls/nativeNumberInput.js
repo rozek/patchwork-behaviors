@@ -14,8 +14,6 @@
       function () { return $._Value || 0 },
       function (newValue) {
         expectNumber('input value',newValue)
-        if ($._Value === newValue) { return }
-
         $._Value = newValue
         if (! $._hasFocus) { $._ValueToShow = newValue }
       }
@@ -145,3 +143,4 @@
       }
     })
   }
+
