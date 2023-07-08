@@ -44,8 +44,8 @@
 
     define$Property(
       'Pattern',
-      function ():string|undefined { return $._Pattern },
-      function (newValue:string|undefined) {
+      function () { return $._Pattern },
+      function (newValue) {
         allowTextline('input pattern',newValue)
         $._Pattern = newValue
       }
