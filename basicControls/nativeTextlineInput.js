@@ -108,7 +108,7 @@
     }
 
     reactively(() => {
-      let SpellChecking:string|undefined
+      let SpellChecking
       switch ($._SpellChecking) {
         case 'disabled': SpellChecking = 'false'; break
         case 'enabled':  SpellChecking = 'true';  break
