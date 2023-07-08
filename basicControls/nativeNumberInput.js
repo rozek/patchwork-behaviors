@@ -118,6 +118,7 @@
 
     function handleInput (Event) {
       let Value = parseFloat(Event.target.value)
+console.log('input number',Value)
       if (isFinite(Value)) { $._Value = $._ValueToShow = Value }
     }
 
