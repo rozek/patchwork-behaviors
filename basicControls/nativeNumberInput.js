@@ -16,7 +16,7 @@
         expectNumber('input value',newValue)
         if ($._Value !== newValue) {
           $._Value = newValue
-          if (! $._hasFocus) { $._ValueToShow = newValue }
+          if (! $._hasFocus) { $._ValueToShow = Math.round(newValue*100)/100 }
         }
       }
     )
