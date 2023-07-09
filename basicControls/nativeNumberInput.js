@@ -17,8 +17,10 @@ console.log('Getter',$._Value || 0)
       function (newValue) {
         expectNumber('input value',newValue)
 console.log('Setter',newValue)
-        $._Value = newValue
-        if (! $._hasFocus) { $._ValueToShow = newValue }
+        if ($._Value !== newValue) {
+          $._Value = newValue
+          if (! $._hasFocus) { $._ValueToShow = newValue }
+        }
       }
     )
 
