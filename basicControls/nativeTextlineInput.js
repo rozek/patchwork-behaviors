@@ -7,7 +7,7 @@
   export const SPW_SpellCheckings = ['default','enabled','disabled']
 
   export function initialize (
-    Work,Sheet,Patch, reactively,
+    Work,Sheet,Patch, installStyle, reactively,
     $,define$Property, fill$fromJSON,JSONfor$, html
   ) {
     define$Property(
