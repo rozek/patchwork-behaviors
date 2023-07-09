@@ -1,7 +1,7 @@
   const { expectText } = SPW
 
   export function initialize (
-    Work,Sheet,Patch, reactively,
+    Work,Sheet,Patch, installStyle, reactively,
     $,define$Property, fill$fromJSON,JSONfor$, html
   ) {
     define$Property(
