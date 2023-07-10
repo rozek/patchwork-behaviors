@@ -1,23 +1,64 @@
+declare const SPW
+
+namespace nativeNumberInput {
   const {
+    ValuesDiffer,
     ValueIsFiniteNumber,
-    expectBoolean, expectNumber, allowFiniteNumber, allowNumberInRange,
+    expectBoolean, expectNumber, allowFiniteNumber,
+    expectNumberInRange, expectIntegerInRange,
     expectListSatisfying,
-    allowTextline
+    allowTextline, expectTextline
   } = SPW
+
+  function formatted (Value,Decimals|'any'):string {
+    return (
+      Decimals === 'any'
+      ? Value.toString()
+      : Value.toFixed(Decimals)
+    )
+  }
 
   export function initialize (
     Work,Sheet,Patch, installStyle, reactively,
     $,define$Property, fill$fromJSON,JSONfor$, html
   ) {
+    installStyle(`
+      .SPW_nativeNumberInput {
+        display:block; position:absolute;
+        left:0px; top:0px; right:0px; bottom:0px;
+      }
+    `)
+
+    $._ClassList    = ''
+    $._Value        = 0
+    $._Minimum      = undefined
+    $._Maximum      = undefined
+    $._Stepping     = 1
+    $._Decimals     = 'any'
+    $._Pattern      = undefined
+    $._Placeholder  = undefined
+    $._isReadonly   = false
+    $._Suggestions  = undefined
+
+    define$Property(
+      'ClassList',
+      function () { return $._ClassList },
+      function (newValue) {
+        expectTextline('CSS class list',newValue)
+          newValue = newValue.trim().replace(/s+/g,' ')
+        if ($._ClassList !== newValue) { $._ClassList = newValue }
+      }
+    )
+
     define$Property(
       'Value',
-      function () { return $._Value || 0 },
+      function () { return $._Value },
       function (newValue) {
         expectNumber('input value',newValue)
-        if ($._Value !== newValue) {
-          $._Value = newValue
-          if (! $._hasFocus) { $._ValueToShow = Math.round(newValue*100)/100 }
-        }
+        if ($._Value === newValue) { return }
+
+        $._Value = newValue
+        if (! $._hasFocus) { $._ValueToShow = formatted(newValue,$._Decimals) }
       }
     )
 
@@ -26,7 +67,10 @@
       function () { return $._Minimum },
       function (newValue) {
         allowFiniteNumber('minimum input value',newValue)
-        $._Minimum = (newValue == null ? undefined : newValue)
+          if (newValue == null) { newValue = undefined }
+        if ($._Minimum === newValue) { return }
+
+        $._Minimum = newValue
 
         if (newValue != null) {
           if ($._Value < newValue) { $.Value = newValue }
@@ -40,7 +84,10 @@
       function () { return $._Maximum },
       function (newValue) {
         allowFiniteNumber('maximum input value',newValue)
-        $._Maximum = (newValue == null ? undefined : newValue)
+          if (newValue == null) { newValue = undefined }
+        if ($._Maximum === newValue) { return }
+
+        $._Maximum = newValue
 
         if (newValue != null) {
           if (($._Minimum || -Infinity) > newValue) { $._Minimum = newValue }
@@ -51,12 +98,28 @@
 
     define$Property(
       'Stepping',
-      function () { return $._Stepping || 'any' },
+      function () { return $._Stepping },
       function (newValue) {
         if (newValue !== 'any') {
-          allowNumberInRange('input stepping',newValue, 0,Infinity, false,false)
+          expectNumberInRange('input stepping',newValue, 0,Infinity, false,false)
         }
-        $._Stepping = newValue
+        if ($._Stepping !== newValue) { $._Stepping = newValue }
+      }
+    )
+
+    define$Property(
+      'Decimals',
+      function () { return $._Decimals },
+      function (newValue) {
+        if (newValue !== 'any') {
+          expectIntegerInRange('value decimals',newValue, 0,20)
+        }
+        if ($._Decimals === newValue) { return }
+
+        $._Decimals = newValue
+        if (newValue !== 'any') {
+          $._ValueToShow = formatted($._Value,newValue)
+        }
       }
     )
 
@@ -65,7 +128,8 @@
       function () { return $._Placeholder },
       function (newValue) {
         allowTextline('input placeholder',newValue)
-        $._Placeholder = newValue
+          if (newValue == null) { newValue = undefined }
+        if ($._Placeholder !== newValue) { $._Placeholder = newValue }
       }
     )
 
@@ -74,7 +138,7 @@
       function () { return $._isReadonly },
       function (newValue) {
         expectBoolean('read-only setting',newValue)
-        $._isReadonly = newValue
+        if ($._isReadonly !== newValue) { $._isReadonly = newValue }
       }
     )
 
@@ -83,13 +147,14 @@
       function () {
         return ($._Suggestions == null ? undefined : $._Suggestions.slice())
       },
-      function (newSuggestions) {
-        if (newSuggestions == null) {
-          $._Suggestions = undefined
+      function (newValue) {
+        if (newValue == null) {
+          newValue = undefined
         } else {
-          expectListSatisfying('list of suggestions',newSuggestions, ValueIsFiniteNumber)
-          $._Suggestions = newSuggestions.slice()
+          expectListSatisfying('list of suggestions',newValue, ValueIsFiniteNumber)
+          newValue = newValue.slice()
         }
+        if (ValuesDiffer($._Suggestions,newValue)) { $._Suggestions = newValue }
       }
     )
 
@@ -104,7 +169,7 @@
     function setFocus (newValue) {
       $._hasFocus = newValue
       if ((newValue == false) && ($._Value !== $._ValueToShow)) {
-        $._ValueToShow = $._Value
+        $._ValueToShow = formatted($._Value,$._Decimals)
       }
     }
 
@@ -125,14 +190,14 @@
 
     reactively(() => {
       if ($._Suggestions == null) {
-        this.Render = html`<input type="number" value=${$._ValueToShow}
-          min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
+        this.Render = html`<input type="number" class="SPW_nativeNumberInput ${$._ClassList}"
+          value=${$._ValueToShow} min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
           placeholder=${$._Placeholder} readonly=${$._isReadonly}
           oninput=${handleInput} onchange=${handleInput}
           onfocus=${() => setFocus(true)} onblur=${() => setFocus(false)}/>`
       } else {
-        this.Render = html`<input type="number" value=${$._ValueToShow}
-          min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
+        this.Render = html`<input type="number" class="SPW_nativeNumberInput ${$._ClassList}"
+          value=${$._ValueToShow} min=${$._Minimum} max=${$._Maximum} step=${$._Stepping}
           placeholder=${$._Placeholder} readonly=${$._isReadonly}
           oninput=${handleInput} onchange=${handleInput}
           onfocus=${() => setFocus(true)} onblur=${() => setFocus(false)}
@@ -145,4 +210,4 @@
       }
     })
   }
-
+}
