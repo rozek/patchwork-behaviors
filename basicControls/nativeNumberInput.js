@@ -1,6 +1,3 @@
-declare const SPW
-
-namespace nativeNumberInput {
   const {
     ValuesDiffer,
     ValueIsFiniteNumber,
@@ -210,4 +207,3 @@ namespace nativeNumberInput {
       }
     })
   }
-}
