@@ -1,4 +1,8 @@
-//namespace HTMLView {
+/*******************************************************************************
+*                                                                              *
+*                                   HTMLView                                   *
+*                                                                              *
+*******************************************************************************/
 const { expectText, expectTextline } = SPW;
 export function initialize(Work, Sheet, Patch, installStyle, reactively, $, define$Property, fill$fromJSON, JSONfor$, html) {
     installStyle(`
@@ -31,4 +35,3 @@ export function initialize(Work, Sheet, Patch, installStyle, reactively, $, defi
         dangerouslySetInnerHTML=${{ __html: $._Value }}></div>`;
     });
 }
-//}
