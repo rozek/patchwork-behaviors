@@ -1,4 +1,8 @@
-//namespace nativeNumberInput {
+/*******************************************************************************
+*                                                                              *
+*                              nativeNumberInput                               *
+*                                                                              *
+*******************************************************************************/
 const { ValuesDiffer, ValueIsFiniteNumber, expectBoolean, expectNumber, allowFiniteNumber, expectNumberInRange, expectIntegerInRange, expectListSatisfying, allowTextline, expectTextline } = SPW;
 function formatted(Value, Decimals) {
     return (Decimals === 'any'
@@ -170,4 +174,3 @@ export function initialize(Work, Sheet, Patch, installStyle, reactively, $, defi
         }
     });
 }
-//}
